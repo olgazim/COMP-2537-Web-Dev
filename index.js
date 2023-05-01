@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
+const saltRounds = 12;
 const mongoose = require('mongoose');
 
 mongoose.connect
@@ -63,6 +65,8 @@ app.post('/signup', (req, res) => {
     var username = req.body.user_name;
     var email = req.body.email;
     var password = req.body.password;
+    var hashedPassword = bcrypt.hashSync(password, saltRounds);
+    console.log(hashedPassword);
 
     if (!username && !email && !password) {
         console.log("All fields are missing. Please, try again");
@@ -94,6 +98,8 @@ app.post('/signup', (req, res) => {
         return;
     } 
 
+    // store the username in a session variable
+    req.session.username = username;
     res.redirect('/members');
 });
 
@@ -182,7 +188,16 @@ app.get("/login", (req, res) => {
 
 app.get("/members", (req, res) => { 
     console.log("inside members");
-    res.sendFile(__dirname + "/pages/members.html");
+
+    // retrieve the username from the session variable
+    const username = req.session.username;
+    fs.readFile(__dirname + "/pages/members.html", "utf8", (err, data) => {
+            // Replace the placeholder with the error message
+            var modifiedData = data.replace("{userName}", username);
+
+            // Send the modified content to the client
+            res.send(modifiedData);
+    });
 });
 
 
