@@ -67,6 +67,11 @@ a {
     margin:auto;
 }
 
+img {
+    height: 360;
+    width : 640%;
+}
+
 @media (max-width: 600px) {
     form {
         max-width: 300px;
