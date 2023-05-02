@@ -68,8 +68,8 @@ a {
 }
 
 img {
-    height: 360;
-    width : 640%;
+    height: 260;
+    width : 440;
 }
 
 @media (max-width: 600px) {
