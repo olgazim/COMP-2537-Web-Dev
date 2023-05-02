@@ -243,6 +243,10 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/members", (req, res) => { 
+    if (!req.session.authenticated) {
+        res.redirect('/');
+        return;
+    }
     console.log("inside members");
     const randomNumber = Math.floor(Math.random() * 3) + 1;
     const image = `${randomNumber}.jpg`;
