@@ -168,6 +168,7 @@ app.post('/signup', async (req, res) => {
     });
     console.log("user inserted");
 
+    req.session.authenticated = true;
     req.session.username = username;
     res.redirect('/members');
 });
@@ -237,16 +238,12 @@ app.get("/loggedIn", (res, req) => {
     res.redirect("/members");
 })
 
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
-});
 
 app.get("/members", (req, res) => { 
     if (!req.session.authenticated) {
         res.redirect('/');
-        return;
-    }
+        console.log("no session");
+    } else {
     console.log("inside members");
     const randomNumber = Math.floor(Math.random() * 3) + 1;
     const image = `${randomNumber}.jpg`;
@@ -261,9 +258,14 @@ app.get("/members", (req, res) => {
 
         // Send the modified content to the client
         res.send(modifiedData);
-    });
+    });}
 });
 
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+});
 
 // // only for authenticated users
 // const authenticatedUsersOnly = (req, res, next) => {
